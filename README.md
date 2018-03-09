@@ -3,7 +3,7 @@ A block for Gutenberg that adds a nicely formatted Github embed to post content 
 
 ## Installation
 
-- Clone down the repository, or download the files and include it in your `wp-content/plugins/github-gutenberg-block` directory
+```git clone https://github.com/dainemawer/github-gutenberg-block.git```
 
 - Make sure you have Gutenberg installed: https://wordpress.org/plugins/gutenberg/
 
