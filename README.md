@@ -25,6 +25,14 @@ A block for Gutenberg that adds a nicely formatted Github embed to post content 
 
 - The block uses the Public Github API, which means you only have 50 requests per hour. If you want to use the Oauth version of the Gihub API, which has to be tied to a Github account (5000 requests per hour) please create an issue on the repository. I am currently developing the Oauth version of the plugin.
 
+## Demonstration
+
+### From the Gutenberg Editor
+
+![A demonstration of the Github Embed block for Gutenberg ](https://dha4w82d62smt.cloudfront.net/items/2B3e3u1u1Z2a073s3b1P/Screen%20Recording%202018-03-11%20at%2010.41%20AM.gif)
+
+### From the Front-end
+
 ## License
 GPL 2.0
 
