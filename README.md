@@ -5,6 +5,10 @@ A block for Gutenberg that adds a nicely formatted Github embed to post content 
 
 ```git clone https://github.com/dainemawer/github-gutenberg-block.git```
 
+- `cd` into the plugin folder, locate the webpack.config.js file
+
+- In that directory run `npm run dev` to create a compiled `block.build.js`
+
 - Make sure you have Gutenberg installed: https://wordpress.org/plugins/gutenberg/
 
 - Log in to WordPress and visit Plugins -> All Plugins
