@@ -34,7 +34,7 @@ A block for Gutenberg that adds a nicely formatted Github embed to post content 
 ### From the Front-end
 
 ## License
-GPL 2.0
+GPL 2.0 or later
 
 ## Support my work
 The plugin is free to use, but I develop in my spare time, if you're happy with the development of the plugin, or want to see new features, please post an issue and support my work by making a donation: https://www.paypal.me/dainemawer
