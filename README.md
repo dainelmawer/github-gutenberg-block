@@ -29,11 +29,10 @@ A block for Gutenberg that adds a nicely formatted Github embed to post content 
 
 ### From the Gutenberg Editor
 
-![A demonstration of the Github Embed block within the Gutenberg Editor ](https://dha4w82d62smt.cloudfront.net/items/2B3e3u1u1Z2a073s3b1P/Screen%20Recording%202018-03-11%20at%2010.41%20AM.gif)
+![A demonstration of the Github Embed block within the Gutenberg Editor](https://dha4w82d62smt.cloudfront.net/items/2B3e3u1u1Z2a073s3b1P/Screen%20Recording%202018-03-11%20at%2010.41%20AM.gif)
 
 ### From the Front-end (TwentySeventeen)
-![A demonstration of the Github Embed block within TwentySeventeen]
-(https://dha4w82d62smt.cloudfront.net/items/1a373g320R1Q1c2u2o3r/Screen%20Recording%202018-03-12%20at%2007.56%20AM.gif)
+![A demonstration of the Github Embed block within TwentySeventeen](https://dha4w82d62smt.cloudfront.net/items/1a373g320R1Q1c2u2o3r/Screen%20Recording%202018-03-12%20at%2007.56%20AM.gif)
 
 ## License
 GPL 2.0 or later
