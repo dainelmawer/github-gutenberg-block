@@ -33,17 +33,6 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/github-block/block.php';
 
-if( ! function_exists( 'github_block_init' ) ) {
-
-    function github_block_init() {
-        register_block_type( 'dainemawer/gitblock', array(
-            'render_callback' => 'gitblock_render',
-        ));
-    }
-
-    add_action( 'init', 'github_block_init' );
-
-}
 
 
 
