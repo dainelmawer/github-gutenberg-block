@@ -24,6 +24,34 @@ if( ! function_exists( 'github_embed_init' ) ) {
 
 }
 
+if( ! function_exists( 'get_md5_post_hash' ) ) {
+
+    /*
+    * A function to hash the post_modified property in the db
+    *
+    * This function md5's the post_modified string for the given
+    * post in order to be used as a cache buster for transients
+    * in the render_github_embed()
+    * @param object $post WordPress post object
+    *
+    */
+
+    function get_md5_post_hash( $post ) {
+
+        // If there is no post object, bail.
+        if( ! $post ) {
+            return;
+        }
+
+        // Uses the native PHP md5 function to convert post_modified date
+        // to a hash which we can append to the transient name
+        $modified = md5( $post->post_modified );
+        return $modified;
+
+    }
+
+}
+
 if( ! function_exists( 'render_github_embed' ) ) {
 
     /*
@@ -37,38 +65,77 @@ if( ! function_exists( 'render_github_embed' ) ) {
 
     function render_github_embed( $attributes ) {
 
+        // Grab access to the $post object
+        global $post;
+
+        // We'll set a default variable called $data which we will replace as we go through the logic
+        $data = '';
+
+        // Check if the $attributes array is empty, stop here if it is.
+        if( empty( $attributes ) ) {
+            return;
+        }
+
         // Build API endpoint
         $apiURL = 'https://api.github.com/repos';
 
         // This is our dynamic URL input that we setup in registerBlockType()
-        $endpoint = str_replace('https://github.com/', '', $attributes['url']);
+        $endpoint = str_replace('https://github.com/', '', $attributes['url'] );
 
-        // Use wp_remote_get to make an API request to Github with user inputted URL from Gutenberg
-        $response = wp_remote_get( esc_url_raw( $apiURL . '/' . $endpoint ) );
-        
-        // Check if the response is a valid array
-        if( is_array( $response ) ) {
 
-            // Conver that array to a JSON object
+        // Using our function above, we'll hash the post_modified time.
+        $bust = get_md5_post_hash( $post );
 
-            $data = json_decode( wp_remote_retrieve_body( $response ), true );
+        // Check if our transient is in the database
+        $transient = get_transient( 'github_block_' . $bust );
 
-            // Build up our markup
-            $html  = '<div class="github-embed-wrapper">';
-            $html .= '<div class="repo-description">';
-            $html .= '<a href="'. esc_attr( esc_url( $data['html_url'] ) ) . '" title="' . esc_attr( $data['name'] ) . '" target="_blank" rel="noopener noferrer">' . esc_attr( $data['full_name'] ) . '</a><p>' . wp_trim_words( esc_attr( $data['description'] ), 10, '...' )  . '</p>';
-            $html .= '</div>';
-            $html .= '<a href="' . esc_attr( esc_url( $data['html_url'] ) ) . '" class="avatar_img" style="background-image: url(' . esc_attr( esc_url( $data['owner']['avatar_url'] ) ) . ')" target="_blank" rel="noopener noferrer"></a>';
-            $html .= '</div>';
-        
+        // If it is there, set $data to the value of the transient
+        if( ! empty( $transient ) ) {
+
+            $data = $transient;
+
+        // If it isnt, perform a GET request to the Public Github API
         } else {
 
-            // If we didnt get back a valid array, output a user friendly error message.
+            // Using wp_remote_get to grab the response from the API
+            $response = wp_remote_get( esc_url_raw( $apiURL . '/' . $endpoint ) );
+
+            // Check if the response is valid
+            if( is_array( $response ) ) {
+
+                // Convert that array to a JSON object
+                $data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+                // Set our transient in the DB with the data from the API. 
+                // Cache will be busted after successful post modification.
+                set_transient( 'github_block_' . $bust, $data, DAY_IN_SECONDS );
+
+            } 
+
+        }
+
+        // Check if there is a value for $data[message] and bail.
+        if( ! empty( $data['message'] )  ) {
+            return;
+        }
+
+        // Final check for the existance of data
+        if( $data ) {
+
+                $html  = '<div class="github-embed-wrapper">';
+                $html .= '<div class="repo-description">';
+                $html .= '<a href="'. esc_attr( esc_url( $data['html_url'] ) ) . '" title="' . esc_attr( $data['name'] ) . '" target="_blank" rel="noopener noferrer">' . esc_attr( $data['full_name'] ) . '</a><p>' . wp_trim_words( esc_attr( $data['description'] ), 10, '...' )  . '</p>';
+                $html .= '</div>';
+                $html .= '<a href="' . esc_attr( esc_url( $data['html_url'] ) ) . '" class="avatar_img" style="background-image: url(' . esc_attr( esc_url( $data['owner']['avatar_url'] ) ) . ')" target="_blank" rel="noopener noferrer"></a>';
+                $html .= '</div>';
+
+        } else {
+
             $html = '<p>' . __( 'Bummer, looks like there was an error retrieving data, have you checked that the Github URL above is correct?' ) . '</p>';
 
         }
 
-        // Return the markup, this function will store the data in post_content, and render it when we use the_content() in our templates
+        // Return data and Markup
         return $html; 
 
     }
